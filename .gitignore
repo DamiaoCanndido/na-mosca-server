@@ -1,0 +1,45 @@
+# Binários para programas e plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Arquivos específicos do Go
+/vendor/
+/go.sum
+/go.work
+
+# Arquivos de ambiente
+.env
+.env.local
+.env.*.local
+
+# IDEs e editores
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Arquivos de log
+*.log
+
+# Arquivos de build
+/dist/
+/build/
+
+# Arquivos de banco de dados
+*.sqlite
+*.sqlite3
+*.db
+
+# Arquivos temporários
+/tmp/
+/temp/
+
+# Arquivos de cobertura
+/coverage/
+*.cover 
