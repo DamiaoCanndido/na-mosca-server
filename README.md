@@ -1,6 +1,6 @@
-# Sistema de Autenticação com Gin-Gonic
+# Sistema Na Mosca - Bolões de Futebol
 
-Este é um sistema de autenticação básico construído com Gin-Gonic, PostgreSQL e JWT, seguindo a arquitetura hexagonal.
+Este é um sistema de bolões de futebol construído com Gin-Gonic, PostgreSQL e JWT, seguindo a arquitetura hexagonal.
 
 ## Requisitos
 
@@ -14,7 +14,7 @@ Este é um sistema de autenticação básico construído com Gin-Gonic, PostgreS
 
 ```bash
 git clone [url-do-repositorio]
-cd bolao
+cd na-mosca-server
 ```
 
 2. Instale as dependências:
@@ -25,7 +25,7 @@ go mod download
 
 3. Configure o banco de dados:
 
-- Crie um banco de dados PostgreSQL chamado `bolao`
+- Crie um banco de dados PostgreSQL chamado `na_mosca`
 - Ajuste as credenciais no arquivo `.env` conforme necessário
 
 4. Execute as migrações:
@@ -33,6 +33,15 @@ go mod download
 ```bash
 go run main.go
 ```
+
+## Funcionalidades
+
+- Criação e gerenciamento de bolões
+- Participação em bolões existentes
+- Palpites para jogos
+- Ranking de participantes
+- Notificações de resultados
+- Sistema de pontuação automática
 
 ## Uso
 
@@ -52,12 +61,22 @@ curl -X POST http://localhost:8080/login \
   -d '{"email": "usuario@exemplo.com", "password": "senha123"}'
 ```
 
-### Rotas Protegidas
+### Criar um bolão
 
-Para acessar rotas protegidas, inclua o token JWT no header:
-
+```bash
+curl -X POST http://localhost:8080/pools \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <seu-token-jwt>" \
+  -d '{"name": "Brasileirão 2024", "description": "Bolão do campeonato brasileiro"}'
 ```
-Authorization: Bearer <seu-token-jwt>
+
+### Fazer um palpite
+
+```bash
+curl -X POST http://localhost:8080/guesses \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <seu-token-jwt>" \
+  -d '{"match_id": "123", "home_goals": 2, "away_goals": 1}'
 ```
 
 ## Estrutura do Projeto
