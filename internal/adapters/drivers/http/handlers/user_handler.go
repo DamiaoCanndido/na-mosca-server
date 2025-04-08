@@ -16,7 +16,7 @@ func NewUserHandler(service *ports.UserService) *UserHandler {
 	return &UserHandler{service: service}
 }
 
-type CreateUserRequest struct {
+type RegisterUserRequest struct {
 	Name            string `json:"name" binding:"required"`
 	Email           string `json:"email" binding:"required,email"`
 	Password        string `json:"password" binding:"required,min=6"`
@@ -28,16 +28,24 @@ type LoginRequest struct {
 	Password string `json:"password" binding:"required"`
 }
 
-func (h *UserHandler) CreateUser(c *gin.Context) {
-	var req CreateUserRequest
+func (h *UserHandler) RegisterUser(c *gin.Context) {
+	var req RegisterUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	user, err := h.service.CreateUser(req.Name, req.Email, req.Password)
+	user, err := h.service.RegisterUser(req.Name, req.Email, req.Password)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		if err.Error() == "email já está em uso" {
+			c.JSON(http.StatusConflict, gin.H{"error": "Este email já está cadastrado"})
+			return
+		}
+		if err.Error() == "a senha deve ter no mínimo 6 caracteres" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "A senha deve ter no mínimo 6 caracteres"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao criar usuário"})
 		return
 	}
 

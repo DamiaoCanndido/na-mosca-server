@@ -22,6 +22,11 @@ type UserRepository struct {
 	db *gorm.DB
 }
 
+// Create implements domain.UserRepository.
+func (r *UserRepository) Create(user *domain.User) error {
+	panic("unimplemented")
+}
+
 func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db: db}
 }
@@ -89,7 +94,7 @@ func verifyPassword(password, encodedHash string) bool {
 	return true
 }
 
-func (r *UserRepository) Create(user *domain.User) error {
+func (r *UserRepository) RegisterUser(user *domain.User) error {
 	hashedPassword, err := hashPassword(user.Password)
 	if err != nil {
 		return err
@@ -112,4 +117,4 @@ func (r *UserRepository) VerifyPassword(user *domain.User, password string) erro
 		return errors.New("invalid password")
 	}
 	return nil
-} 
+}

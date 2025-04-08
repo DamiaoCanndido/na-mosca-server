@@ -43,7 +43,7 @@ func main() {
 	r := gin.Default()
 
 	// Public routes
-	r.POST("/users", userHandler.CreateUser)
+	r.POST("/register", userHandler.RegisterUser)
 	r.POST("/login", userHandler.Login)
 
 	// Protected routes

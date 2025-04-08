@@ -18,7 +18,18 @@ func NewUserService(repo domain.UserRepository) *UserService {
 	return &UserService{repo: repo}
 }
 
-func (s *UserService) CreateUser(name, email, password string) (*domain.User, error) {
+func (s *UserService) RegisterUser(name, email, password string) (*domain.User, error) {
+	// Verificar se o email já existe
+	existingUser, err := s.repo.FindByEmail(email)
+	if err == nil && existingUser != nil {
+		return nil, errors.New("email já está em uso")
+	}
+
+	// Verificar tamanho mínimo da senha
+	if len(password) < 6 {
+		return nil, errors.New("a senha deve ter no mínimo 6 caracteres")
+	}
+
 	user := &domain.User{
 		ID:        uuid.New(),
 		Name:      name,
@@ -27,7 +38,7 @@ func (s *UserService) CreateUser(name, email, password string) (*domain.User, er
 		CreatedAt: time.Now(),
 	}
 
-	err := s.repo.Create(user)
+	err = s.repo.Create(user)
 	if err != nil {
 		return nil, err
 	}

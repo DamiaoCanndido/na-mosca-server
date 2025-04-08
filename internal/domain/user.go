@@ -7,9 +7,9 @@ import (
 )
 
 type User struct {
-	ID        uuid.UUID `json:"id"`
+	ID        uuid.UUID `json:"id" gorm:"type:uuid;primary_key"`
 	Name      string    `json:"name"`
-	Email     string    `json:"email"`
+	Email     string    `json:"email" gorm:"unique"`
 	Password  string    `json:"-"`
 	CreatedAt time.Time `json:"created_at"`
 }
@@ -21,6 +21,6 @@ type UserRepository interface {
 }
 
 type UserService interface {
-	CreateUser(name, email, password string) (*User, error)
+	RegisterUser(name, email, password string) (*User, error)
 	Authenticate(email, password string) (string, error)
 } 
