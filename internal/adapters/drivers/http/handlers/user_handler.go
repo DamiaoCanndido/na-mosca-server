@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"bolao/internal/ports"
+	"github.com/DamiaoCanndido/na-mosca-server/internal/ports"
 
 	"github.com/gin-gonic/gin"
 )

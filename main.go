@@ -4,11 +4,11 @@ import (
 	"log"
 	"os"
 
-	"bolao/internal/adapters/driven/userRepo"
-	"bolao/internal/adapters/drivers/http/handlers"
-	"bolao/internal/adapters/drivers/http/middleware"
-	"bolao/internal/domain"
-	"bolao/internal/ports"
+	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/driven/userRepo"
+	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/drivers/http/handlers"
+	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/drivers/http/middleware"
+	"github.com/DamiaoCanndido/na-mosca-server/internal/domain"
+	"github.com/DamiaoCanndido/na-mosca-server/internal/ports"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"

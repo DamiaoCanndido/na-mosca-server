@@ -1,10 +1,11 @@
 package userRepo
 
 import (
-	"bolao/internal/domain"
 	"crypto/rand"
 	"encoding/base64"
 	"errors"
+
+	"github.com/DamiaoCanndido/na-mosca-server/internal/domain"
 
 	"golang.org/x/crypto/argon2"
 	"gorm.io/gorm"

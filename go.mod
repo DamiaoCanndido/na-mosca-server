@@ -1,4 +1,4 @@
-module bolao
+module github.com/DamiaoCanndido/na-mosca-server
 
 go 1.23.0
 

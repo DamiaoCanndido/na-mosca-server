@@ -1,10 +1,11 @@
 package ports
 
 import (
-	"bolao/internal/domain"
 	"errors"
 	"os"
 	"time"
+
+	"github.com/DamiaoCanndido/na-mosca-server/internal/domain"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
