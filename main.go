@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/driven/footballApi"
 	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/driven/userRepo"
 	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/drivers/http/handlers"
 	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/drivers/http/routes"
@@ -32,18 +33,22 @@ func main() {
 
 	// Initialize repositories
 	userRepo := userRepo.NewUserRepository(db)
+	footballRepo := footballApi.NewFootballAPI()
 
 	// Initialize services
 	userService := ports.NewUserService(userRepo)
+	footballService := ports.NewFootballService(footballRepo)
 
 	// Initialize handlers
 	userHandler := handlers.NewUserHandler(userService)
+	footballHandler := handlers.NewFootballHandler(footballService)
 
 	// Initialize router
 	r := gin.Default()
 
 	// Setup routes
 	routes.SetupAuthRoutes(r, userHandler)
+	routes.SetupFootballRoutes(r, footballHandler)
 
 	// Start server
 	r.Run(":8080")
