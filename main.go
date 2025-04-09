@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/driven/footballApi"
-	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/driven/userRepo"
+	footApiRepo "github.com/DamiaoCanndido/na-mosca-server/internal/adapters/driven/foot_api_repo"
+	userRepo "github.com/DamiaoCanndido/na-mosca-server/internal/adapters/driven/user_repo"
 	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/drivers/http/handlers"
 	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/drivers/http/routes"
 	"github.com/DamiaoCanndido/na-mosca-server/internal/domain"
@@ -33,7 +33,7 @@ func main() {
 
 	// Initialize repositories
 	userRepo := userRepo.NewUserRepository(db)
-	footballRepo := footballApi.NewFootballAPI()
+	footballRepo := footApiRepo.NewFootballAPI()
 
 	// Initialize services
 	userService := ports.NewUserService(userRepo)

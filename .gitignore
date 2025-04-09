@@ -16,6 +16,7 @@
 .env
 .env.local
 .env.*.local
+responses.js
 
 # IDEs e editores
 .idea/

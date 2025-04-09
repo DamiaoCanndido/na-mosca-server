@@ -17,7 +17,7 @@ func NewFootballHandler(service *ports.FootballService) *FootballHandler {
 }
 
 func (h *FootballHandler) GetLeagues(c *gin.Context) {
-	country := c.DefaultQuery("country", "Brazil")
+	country := c.DefaultQuery("country", "brazil")
 
 	leagues, err := h.service.GetLeagues(country)
 	if err != nil {
