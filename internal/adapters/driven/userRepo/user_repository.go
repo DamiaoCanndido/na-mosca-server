@@ -23,11 +23,6 @@ type UserRepository struct {
 	db *gorm.DB
 }
 
-// Create implements domain.UserRepository.
-func (r *UserRepository) Create(user *domain.User) error {
-	panic("unimplemented")
-}
-
 func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db: db}
 }

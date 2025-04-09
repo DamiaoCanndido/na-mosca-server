@@ -15,7 +15,7 @@ type User struct {
 }
 
 type UserRepository interface {
-	Create(user *User) error
+	RegisterUser(user *User) error
 	FindByEmail(email string) (*User, error)
 	VerifyPassword(user *User, password string) error
 }

@@ -39,7 +39,7 @@ func (s *UserService) RegisterUser(name, email, password string) (*domain.User, 
 		CreatedAt: time.Now(),
 	}
 
-	err = s.repo.Create(user)
+	err = s.repo.RegisterUser(user)
 	if err != nil {
 		return nil, err
 	}
