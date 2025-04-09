@@ -6,7 +6,7 @@ import (
 
 	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/driven/userRepo"
 	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/drivers/http/handlers"
-	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/drivers/http/middleware"
+	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/drivers/http/routes"
 	"github.com/DamiaoCanndido/na-mosca-server/internal/domain"
 	"github.com/DamiaoCanndido/na-mosca-server/internal/ports"
 
@@ -42,16 +42,8 @@ func main() {
 	// Initialize router
 	r := gin.Default()
 
-	// Public routes
-	r.POST("/register", userHandler.RegisterUser)
-	r.POST("/login", userHandler.Login)
-
-	// Protected routes
-	auth := r.Group("/")
-	auth.Use(middleware.AuthMiddleware())
-	{
-		// Add protected routes here
-	}
+	// Setup routes
+	routes.SetupAuthRoutes(r, userHandler)
 
 	// Start server
 	r.Run(":8080")
