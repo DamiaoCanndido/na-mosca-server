@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/drivers/http/dtos"
 	"github.com/DamiaoCanndido/na-mosca-server/internal/ports"
 
 	"github.com/gin-gonic/gin"
@@ -16,22 +17,16 @@ func NewUserHandler(service *ports.UserService) *UserHandler {
 	return &UserHandler{service: service}
 }
 
-type RegisterUserRequest struct {
-	Name            string `json:"name" binding:"required"`
-	Email           string `json:"email" binding:"required,email"`
-	Password        string `json:"password" binding:"required,min=6"`
-	ConfirmPassword string `json:"confirmPassword" binding:"required,eqfield=Password"`
-}
-
-type LoginRequest struct {
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required"`
-}
-
 func (h *UserHandler) RegisterUser(c *gin.Context) {
-	var req RegisterUserRequest
+	var req dtos.RegisterUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Dados inválidos", "details": err.Error()})
+		return
+	}
+
+	// Validação personalizada
+	if errors := req.Validate(); len(errors) > 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Erro de validação", "details": errors})
 		return
 	}
 
@@ -39,10 +34,6 @@ func (h *UserHandler) RegisterUser(c *gin.Context) {
 	if err != nil {
 		if err.Error() == "email já está em uso" {
 			c.JSON(http.StatusConflict, gin.H{"error": "Este email já está cadastrado"})
-			return
-		}
-		if err.Error() == "a senha deve ter no mínimo 6 caracteres" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "A senha deve ter no mínimo 6 caracteres"})
 			return
 		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao criar usuário"})
@@ -53,15 +44,21 @@ func (h *UserHandler) RegisterUser(c *gin.Context) {
 }
 
 func (h *UserHandler) Login(c *gin.Context) {
-	var req LoginRequest
+	var req dtos.LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Dados inválidos", "details": err.Error()})
+		return
+	}
+
+	// Validação personalizada
+	if errors := req.Validate(); len(errors) > 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Erro de validação", "details": errors})
 		return
 	}
 
 	token, err := h.service.Authenticate(req.Email, req.Password)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Credenciais inválidas"})
 		return
 	}
 
