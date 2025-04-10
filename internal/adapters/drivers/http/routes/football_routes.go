@@ -14,4 +14,4 @@ func SetupFootballRoutes(router *gin.Engine, footballHandler *handlers.FootballH
 		football.GET("/leagues/:leagueID/fixtures", footballHandler.GetFixtures)
 		football.GET("/live", footballHandler.GetLiveFixtures)
 	}
-} 
+}

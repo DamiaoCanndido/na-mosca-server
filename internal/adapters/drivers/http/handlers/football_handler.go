@@ -17,14 +17,14 @@ func NewFootballHandler(service *ports.FootballService) *FootballHandler {
 }
 
 func (h *FootballHandler) GetLeagues(c *gin.Context) {
-	country := c.DefaultQuery("country", "brazil")
+	
 
-	leagues, err := h.service.GetLeagues(country)
+	var leagueIDs = []int{71, 72, 140}
+	
+
+	leagues, err := h.service.GetLeagues(leagueIDs)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error":   "Erro ao buscar ligas",
-			"details": err.Error(),
-		})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao buscar ligas", "details": err.Error()})
 		return
 	}
 
@@ -76,4 +76,4 @@ func (h *FootballHandler) GetLiveFixtures(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, fixtures)
-} 
+}

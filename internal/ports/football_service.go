@@ -12,8 +12,8 @@ func NewFootballService(repo domain.FootballRepository) *FootballService {
 	return &FootballService{repo: repo}
 }
 
-func (s *FootballService) GetLeagues(country string) ([]domain.League, error) {
-	return s.repo.GetLeagues(country)
+func (s *FootballService) GetLeagues(leagueIDs []int) ([]domain.League, error) {
+	return s.repo.GetLeagues(leagueIDs)
 }
 
 func (s *FootballService) GetFixtures(leagueID int, season string, status string) ([]domain.Fixture, error) {
@@ -22,4 +22,4 @@ func (s *FootballService) GetFixtures(leagueID int, season string, status string
 
 func (s *FootballService) GetLiveFixtures() ([]domain.Fixture, error) {
 	return s.repo.GetLiveFixtures()
-} 
+}

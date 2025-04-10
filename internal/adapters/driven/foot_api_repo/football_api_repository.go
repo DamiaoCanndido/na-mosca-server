@@ -69,57 +69,62 @@ func (api *FootballAPI) makeRequest(endpoint string, params map[string]string) (
 	return resp, nil
 }
 
-func (api *FootballAPI) GetLeagues(country string) ([]domain.League, error) {
-	cacheKey := fmt.Sprintf("leagues:%s", country)
-	if cachedData, found := api.cache.Get(cacheKey); found {
-		return cachedData.([]domain.League), nil
-	}
+func (api *FootballAPI) GetLeagues(leagueIDs []int) ([]domain.League, error) {
+	var leagues []domain.League
 
-	params := map[string]string{
-		"country": country,
-		"current":  "true",
-	}
+	for _, id := range leagueIDs {
+		cacheKey := fmt.Sprintf("league:%d", id)
+		if cachedData, found := api.cache.Get(cacheKey); found {
+			leagues = append(leagues, cachedData.(domain.League))
+			continue
+		}
 
-	resp, err := api.makeRequest("leagues", params)
-	if err != nil {
-		return nil, fmt.Errorf("erro ao buscar ligas: %v", err)
-	}
-	defer resp.Body.Close()
+		params := map[string]string{
+			"id": fmt.Sprintf("%d", id),
+			"current": "true",
+		}
 
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("erro ao ler resposta: %v", err)
-	}
+		resp, err := api.makeRequest("leagues", params)
+		if err != nil {
+			return nil, fmt.Errorf("erro ao buscar liga com ID %d: %v", id, err)
+		}
+		defer resp.Body.Close()
 
-	var apiResponse dto.APIResponse
-	if err := json.Unmarshal(body, &apiResponse); err != nil {
-		return nil, fmt.Errorf("erro ao decodificar resposta: %v", err)
-	}
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("erro ao ler resposta para liga com ID %d: %v", id, err)
+		}
 
-	if len(apiResponse.Errors) > 0 {
-		return nil, fmt.Errorf("erros da API: %v", apiResponse.Errors)
-	}
+		var apiResponse dto.APIResponse
+		if err := json.Unmarshal(body, &apiResponse); err != nil {
+			return nil, fmt.Errorf("erro ao decodificar resposta para liga com ID %d: %v", id, err)
+		}
 
-	var apiLeagues []dto.ApiLeague
-	responseData, _ := json.Marshal(apiResponse.Response)
-	if err := json.Unmarshal(responseData, &apiLeagues); err != nil {
-		return nil, fmt.Errorf("erro ao decodificar ligas: %v", err)
-	}
+		if len(apiResponse.Errors) > 0 {
+			return nil, fmt.Errorf("erros da API para liga com ID %d: %v", id, apiResponse.Errors)
+		}
 
-	leagues := make([]domain.League, len(apiLeagues))
-	for i, apiLeague := range apiLeagues {
-		leagues[i] = domain.League{
-			ID:      apiLeague.League.ID,
-			Name:    apiLeague.League.Name,
-			Country: apiLeague.Country.Name,
-			Season:  apiLeague.Seasons[0].Year,
-			Code:    apiLeague.Country.Code,
-			Logo:    apiLeague.League.Logo,
-			Flag:    apiLeague.Country.Flag,
+		var apiLeagues []dto.ApiLeague
+		responseData, _ := json.Marshal(apiResponse.Response)
+		if err := json.Unmarshal(responseData, &apiLeagues); err != nil {
+			return nil, fmt.Errorf("erro ao decodificar liga com ID %d: %v", id, err)
+		}
+
+		for _, apiLeague := range apiLeagues {
+			league := domain.League{
+				ID:      apiLeague.League.ID,
+				Name:    apiLeague.League.Name,
+				Country: apiLeague.Country.Name,
+				Season:  apiLeague.Seasons[0].Year,
+				Code:    apiLeague.Country.Code,
+				Logo:    apiLeague.League.Logo,
+				Flag:    apiLeague.Country.Flag,
+			}
+			leagues = append(leagues, league)
+			api.cache.Set(cacheKey, league, cache.DefaultExpiration)
 		}
 	}
 
-	api.cache.Set(cacheKey, leagues, cache.DefaultExpiration)
 	return leagues, nil
 }
 
