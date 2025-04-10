@@ -11,6 +11,7 @@ import (
 
 	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/driven/foot_api_repo/dto"
 	"github.com/DamiaoCanndido/na-mosca-server/internal/domain"
+	cache "github.com/patrickmn/go-cache"
 )
 
 const (
@@ -20,6 +21,7 @@ const (
 type FootballAPI struct {
 	client *http.Client
 	apiKey string
+	cache  *cache.Cache
 }
 
 func NewFootballAPI() *FootballAPI {
@@ -33,6 +35,7 @@ func NewFootballAPI() *FootballAPI {
 			Timeout: 10 * time.Second,
 		},
 		apiKey: apiKey,
+		cache:  cache.New(12*time.Hour, 24*time.Hour), // Cache com expiração de 12 horas
 	}
 }
 
@@ -66,8 +69,12 @@ func (api *FootballAPI) makeRequest(endpoint string, params map[string]string) (
 	return resp, nil
 }
 
-// GetLeagues retorna as ligas disponíveis
 func (api *FootballAPI) GetLeagues(country string) ([]domain.League, error) {
+	cacheKey := fmt.Sprintf("leagues:%s", country)
+	if cachedData, found := api.cache.Get(cacheKey); found {
+		return cachedData.([]domain.League), nil
+	}
+
 	params := map[string]string{
 		"country": country,
 	}
@@ -110,14 +117,20 @@ func (api *FootballAPI) GetLeagues(country string) ([]domain.League, error) {
 		}
 	}
 
+	api.cache.Set(cacheKey, leagues, cache.DefaultExpiration)
 	return leagues, nil
 }
 
-// GetFixtures retorna os jogos de uma liga específica
-func (api *FootballAPI) GetFixtures(leagueID int, season string) ([]domain.Fixture, error) {
+func (api *FootballAPI) GetFixtures(leagueID int, season string, status string) ([]domain.Fixture, error) {
+	cacheKey := fmt.Sprintf("fixtures:%d:%s:%s", leagueID, season, status)
+	if cachedData, found := api.cache.Get(cacheKey); found {
+		return cachedData.([]domain.Fixture), nil
+	}
+
 	params := map[string]string{
 		"league": fmt.Sprintf("%d", leagueID),
 		"season": season,
+		"status": status,
 	}
 
 	resp, err := api.makeRequest("fixtures", params)
@@ -165,10 +178,10 @@ func (api *FootballAPI) GetFixtures(leagueID int, season string) ([]domain.Fixtu
 		}
 	}
 
+	api.cache.Set(cacheKey, fixtures, cache.DefaultExpiration)
 	return fixtures, nil
 }
 
-// GetLiveFixtures retorna os jogos ao vivo
 func (api *FootballAPI) GetLiveFixtures() ([]domain.Fixture, error) {
 	resp, err := api.makeRequest("fixtures", map[string]string{"live": "all"})
 	if err != nil {

@@ -29,7 +29,7 @@ type Fixture struct {
 
 type FootballRepository interface {
 	GetLeagues(country string) ([]League, error)
-	GetFixtures(leagueID int, season string) ([]Fixture, error)
+	GetFixtures(leagueID int, season string, status string) ([]Fixture, error)
 	GetLiveFixtures() ([]Fixture, error)
 }
 

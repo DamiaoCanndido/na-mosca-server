@@ -41,9 +41,10 @@ func (h *FootballHandler) GetFixtures(c *gin.Context) {
 		return
 	}
 
-	season := c.DefaultQuery("season", "2024")
+	season := c.DefaultQuery("season", "2025")
+	status := c.DefaultQuery("status", "NS")
 
-	fixtures, err := h.service.GetFixtures(leagueID, season)
+	fixtures, err := h.service.GetFixtures(leagueID, season, status)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error":   "Erro ao buscar jogos",
