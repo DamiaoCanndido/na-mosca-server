@@ -41,7 +41,16 @@ func (h *FootballHandler) GetFixtures(c *gin.Context) {
 		return
 	}
 
-	season := c.DefaultQuery("season", "2025")
+	seasonQuery := c.Query("season")
+	if seasonQuery == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   "Temporada não informada",
+			"details": "A temporada deve ser informada na query string",
+		})
+		return
+	}
+
+	season := c.DefaultQuery("season", seasonQuery)
 	status := c.DefaultQuery("status", "NS")
 
 	fixtures, err := h.service.GetFixtures(leagueID, season, status)

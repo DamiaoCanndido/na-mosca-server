@@ -77,6 +77,7 @@ func (api *FootballAPI) GetLeagues(country string) ([]domain.League, error) {
 
 	params := map[string]string{
 		"country": country,
+		"current":  "true",
 	}
 
 	resp, err := api.makeRequest("leagues", params)
@@ -111,6 +112,7 @@ func (api *FootballAPI) GetLeagues(country string) ([]domain.League, error) {
 			ID:      apiLeague.League.ID,
 			Name:    apiLeague.League.Name,
 			Country: apiLeague.Country.Name,
+			Season:  apiLeague.Seasons[0].Year,
 			Code:    apiLeague.Country.Code,
 			Logo:    apiLeague.League.Logo,
 			Flag:    apiLeague.Country.Flag,

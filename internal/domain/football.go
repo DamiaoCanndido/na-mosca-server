@@ -6,6 +6,7 @@ type League struct {
 	ID      int    `json:"id"`
 	Name    string `json:"name"`
 	Country string `json:"country"`
+	Season  int    `json:"season"`
 	Code    string `json:"code"`
 	Logo    string `json:"logo"`
 	Flag    string `json:"flag"`
@@ -35,6 +36,6 @@ type FootballRepository interface {
 
 type FootballService interface {
 	GetLeagues(country string) ([]League, error)
-	GetFixtures(leagueID int, season string) ([]Fixture, error)
+	GetFixtures(leagueID int, season string, status string) ([]Fixture, error)
 	GetLiveFixtures() ([]Fixture, error)
 } 
