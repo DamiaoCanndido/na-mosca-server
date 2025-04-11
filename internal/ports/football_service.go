@@ -20,6 +20,6 @@ func (s *FootballService) GetFixtures(leagueID int, season string, status string
 	return s.repo.GetFixtures(leagueID, season, status)
 }
 
-func (s *FootballService) GetLiveFixtures() ([]domain.Fixture, error) {
-	return s.repo.GetLiveFixtures()
+func (s *FootballService) GetTodayFixtures() ([]domain.Fixture, error) {
+	return s.repo.GetTodayFixtures()
 }

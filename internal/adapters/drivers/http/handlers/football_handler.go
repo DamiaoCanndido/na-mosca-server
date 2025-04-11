@@ -19,7 +19,7 @@ func NewFootballHandler(service *ports.FootballService) *FootballHandler {
 func (h *FootballHandler) GetLeagues(c *gin.Context) {
 	
 
-	var leagueIDs = []int{71, 72, 140}
+	var leagueIDs = []int{71, 72}
 	
 
 	leagues, err := h.service.GetLeagues(leagueIDs)
@@ -65,8 +65,8 @@ func (h *FootballHandler) GetFixtures(c *gin.Context) {
 	c.JSON(http.StatusOK, fixtures)
 }
 
-func (h *FootballHandler) GetLiveFixtures(c *gin.Context) {
-	fixtures, err := h.service.GetLiveFixtures()
+func (h *FootballHandler) GetTodayFixtures(c *gin.Context) {
+	fixtures, err := h.service.GetTodayFixtures()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error":   "Erro ao buscar jogos ao vivo",

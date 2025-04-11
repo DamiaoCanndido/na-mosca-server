@@ -12,6 +12,6 @@ func SetupFootballRoutes(router *gin.Engine, footballHandler *handlers.FootballH
 		// Rotas públicas
 		football.GET("/leagues", footballHandler.GetLeagues)
 		football.GET("/leagues/:leagueID/fixtures", footballHandler.GetFixtures)
-		football.GET("/live", footballHandler.GetLiveFixtures)
+		football.GET("/today", footballHandler.GetTodayFixtures)
 	}
 }

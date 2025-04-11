@@ -31,11 +31,11 @@ type Fixture struct {
 type FootballRepository interface {
 	GetLeagues(leagueIDs []int) ([]League, error)
 	GetFixtures(leagueID int, season string, status string) ([]Fixture, error)
-	GetLiveFixtures() ([]Fixture, error)
+	GetTodayFixtures() ([]Fixture, error)
 }
 
 type FootballService interface {
 	GetLeagues(leagueIDs []int) ([]League, error)
 	GetFixtures(leagueID int, season string, status string) ([]Fixture, error)
-	GetLiveFixtures() ([]Fixture, error)
+	GetTodayFixtures() ([]Fixture, error)
 } 

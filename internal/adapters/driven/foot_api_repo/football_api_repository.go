@@ -189,8 +189,16 @@ func (api *FootballAPI) GetFixtures(leagueID int, season string, status string) 
 	return fixtures, nil
 }
 
-func (api *FootballAPI) GetLiveFixtures() ([]domain.Fixture, error) {
-	resp, err := api.makeRequest("fixtures", map[string]string{"live": "all"})
+func (api *FootballAPI) GetTodayFixtures() ([]domain.Fixture, error) {
+	today := time.Now().Format("2006-01-02") // Format today's date as YYYY-MM-DD
+	cacheKey := fmt.Sprintf("fixtures:today:%s", today)
+
+	// Check cache
+	if cachedData, found := api.cache.Get(cacheKey); found {
+		return cachedData.([]domain.Fixture), nil
+	}
+
+	resp, err := api.makeRequest("fixtures", map[string]string{"date": today, "status": "NS"})
 	if err != nil {
 		return nil, err
 	}
@@ -235,5 +243,6 @@ func (api *FootballAPI) GetLiveFixtures() ([]domain.Fixture, error) {
 		}
 	}
 
+	api.cache.Set(cacheKey, fixtures, cache.DefaultExpiration)
 	return fixtures, nil
 }
