@@ -11,6 +11,7 @@ import (
 	"github.com/DamiaoCanndido/na-mosca-server/internal/domain"
 	"github.com/DamiaoCanndido/na-mosca-server/internal/ports"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	postgresDriver "gorm.io/driver/postgres"
@@ -46,10 +47,18 @@ func main() {
 	// Initialize router
 	r := gin.Default()
 
+	// Configurar CORS
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000"}, // Substitua pelo domínio do seu frontend em produção
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Authorization", "Content-Type"},
+		AllowCredentials: true,
+	}))
+
 	// Setup routes
 	routes.SetupAuthRoutes(r, userHandler)
 	routes.SetupFootballRoutes(r, footballHandler)
 
 	// Start server
 	r.Run(":8080")
-} 
+}
