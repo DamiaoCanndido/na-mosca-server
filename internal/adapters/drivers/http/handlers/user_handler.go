@@ -19,10 +19,6 @@ func NewUserHandler(service *ports.UserService) *UserHandler {
 
 func (h *UserHandler) RegisterUser(c *gin.Context) {
 	var req dtos.RegisterUserRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Dados inválidos", "details": err.Error()})
-		return
-	}
 
 	// Validação personalizada
 	if errors := req.Validate(); len(errors) > 0 {
@@ -45,10 +41,6 @@ func (h *UserHandler) RegisterUser(c *gin.Context) {
 
 func (h *UserHandler) Login(c *gin.Context) {
 	var req dtos.LoginRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Dados inválidos", "details": err.Error()})
-		return
-	}
 
 	// Validação personalizada
 	if errors := req.Validate(); len(errors) > 0 {

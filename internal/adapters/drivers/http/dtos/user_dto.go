@@ -14,7 +14,7 @@ type RegisterUserRequest struct {
 
 type LoginRequest struct {
 	Email    string `json:"email" binding:"required" validate:"required,email"`
-	Password string `json:"password" binding:"required" validate:"required"`
+	Password string `json:"password" binding:"required" validate:"required,min=6"`
 }
 
 func (r *RegisterUserRequest) Validate() map[string]string {
