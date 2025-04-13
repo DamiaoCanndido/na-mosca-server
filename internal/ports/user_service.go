@@ -19,7 +19,7 @@ func NewUserService(repo domain.UserRepository) *UserService {
 	return &UserService{repo: repo}
 }
 
-func (s *UserService) RegisterUser(name, email, password string) (*domain.User, error) {
+func (s *UserService) RegisterUser(name, avatar_url, email, password string) (*domain.User, error) {
 	// Verificar se o email já existe
 	existingUser, err := s.repo.FindByEmail(email)
 	if err == nil && existingUser != nil {
@@ -34,6 +34,7 @@ func (s *UserService) RegisterUser(name, email, password string) (*domain.User, 
 	user := &domain.User{
 		ID:        uuid.New(),
 		Name:      name,
+		AvatarUrl: &avatar_url,
 		Email:     email,
 		Password:  password,
 		CreatedAt: time.Now(),

@@ -6,10 +6,11 @@ import (
 )
 
 type RegisterUserRequest struct {
-	Name            string `json:"name" binding:"required" validate:"required,min=3,max=100"`
-	Email           string `json:"email" binding:"required" validate:"required,email"`
-	Password        string `json:"password" binding:"required" validate:"required,min=6"`
-	ConfirmPassword string `json:"confirmPassword" binding:"required" validate:"required,eqfield=Password"`
+	Name            string  `json:"name" binding:"required" validate:"required,min=3,max=100"`
+	AvatarUrl      	*string `json:"avatar_url,omitempty"`
+	Email           string  `json:"email" binding:"required" validate:"required,email"`
+	Password        string  `json:"password" binding:"required" validate:"required,min=6"`
+	ConfirmPassword string  `json:"confirm_password" binding:"required" validate:"required,eqfield=Password"`
 }
 
 type LoginRequest struct {
@@ -28,6 +29,15 @@ func (r *RegisterUserRequest) Validate() map[string]string {
 	} else if len(r.Name) > 100 {
 		errors["name"] = "O nome não pode ter mais de 100 caracteres"
 	}
+
+	// Validação da URL do avatar
+	if r.AvatarUrl != nil && len(*r.AvatarUrl) > 255 {
+		errors["avatar_url"] = "A URL do avatar não pode ter mais de 255 caracteres"
+	}
+	urlRegex := regexp.MustCompile(`^(https):\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(\/\S*)?$`)
+    if r.AvatarUrl != nil && !urlRegex.MatchString(*r.AvatarUrl) {
+        errors["avatar_url"] = "Por favor, insira uma URL válida para o avatar"
+    }
 
 	// Validação do email
 	if strings.TrimSpace(r.Email) == "" {
@@ -63,9 +73,9 @@ func (r *RegisterUserRequest) Validate() map[string]string {
 
 	// Validação da confirmação de senha
 	if strings.TrimSpace(r.ConfirmPassword) == "" {
-		errors["confirmPassword"] = "A confirmação de senha é obrigatória"
+		errors["confirm password"] = "A confirmação de senha é obrigatória"
 	} else if r.Password != r.ConfirmPassword {
-		errors["confirmPassword"] = "As senhas não coincidem"
+		errors["confirm password"] = "As senhas não coincidem"
 	}
 
 	return errors

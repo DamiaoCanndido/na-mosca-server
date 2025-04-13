@@ -28,7 +28,12 @@ func (h *UserHandler) RegisterUser(c *gin.Context) {
 		return
 	}
 
-	user, err := h.service.RegisterUser(req.Name, req.Email, req.Password)
+	avatarUrl := ""
+    if req.AvatarUrl != nil {
+        avatarUrl = *req.AvatarUrl
+    }
+
+	user, err := h.service.RegisterUser(req.Name, avatarUrl, req.Email, req.Password)
 	if err != nil {
 		if err.Error() == "email já está em uso" {
 			c.JSON(http.StatusConflict, gin.H{"error": "Este email já está cadastrado"})
