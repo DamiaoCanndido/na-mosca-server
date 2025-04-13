@@ -22,6 +22,8 @@ type Fixture struct {
 	ID        int       `json:"id"`
 	Date      time.Time `json:"date"`
 	Status    string    `json:"status"`
+	Season    int       `json:"season"`
+	Round     string    `json:"round"`
 	HomeTeam  Team      `json:"homeTeam"`
 	AwayTeam  Team      `json:"awayTeam"`
 	GoalsHome int       `json:"goalsHome"`

@@ -20,6 +20,8 @@ func NewUserHandler(service *ports.UserService) *UserHandler {
 func (h *UserHandler) RegisterUser(c *gin.Context) {
 	var req dtos.RegisterUserRequest
 
+	c.BindJSON(&req)
+
 	// Validação personalizada
 	if errors := req.Validate(); len(errors) > 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Erro de validação", "details": errors})
@@ -41,6 +43,8 @@ func (h *UserHandler) RegisterUser(c *gin.Context) {
 
 func (h *UserHandler) Login(c *gin.Context) {
 	var req dtos.LoginRequest
+
+	c.BindJSON(&req)
 
 	// Validação personalizada
 	if errors := req.Validate(); len(errors) > 0 {

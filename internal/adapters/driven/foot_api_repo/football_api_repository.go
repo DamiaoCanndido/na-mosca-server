@@ -170,6 +170,8 @@ func (api *FootballAPI) GetFixtures(leagueID int, season string, status string) 
 				return parsedDate
 			}(),
 			Status: apiFixture.Fixture.Status.Short,
+			Season: apiFixture.League.Season,
+			Round:  apiFixture.League.Round,
 			HomeTeam: domain.Team{
 				ID:   apiFixture.Teams.Home.ID,
 				Name: apiFixture.Teams.Home.Name,

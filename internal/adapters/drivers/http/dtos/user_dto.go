@@ -87,6 +87,8 @@ func (l *LoginRequest) Validate() map[string]string {
 	// Validação da senha
 	if strings.TrimSpace(l.Password) == "" {
 		errors["password"] = "A senha é obrigatória"
+	} else if len(l.Password) < 6 {
+		errors["password"] = "A senha deve ter pelo menos 6 caracteres"
 	}
 
 	return errors
