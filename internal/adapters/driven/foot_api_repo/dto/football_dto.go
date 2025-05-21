@@ -86,17 +86,17 @@ type ApiFixture struct {
 		} `json:"away"`
 	} `json:"teams"`
 	Goals struct {
-		Home int `json:"home"`
-		Away int `json:"away"`
+		Home *int `json:"home"`
+		Away *int `json:"away"`
 	} `json:"goals"`
 	Score struct {
 		Halftime struct {
-			Home int `json:"home"`
-			Away int `json:"away"`
+			Home *int `json:"home"`
+			Away *int `json:"away"`
 		} `json:"halftime"`
 		Fulltime struct {
-			Home int `json:"home"`
-			Away int `json:"away"`
+			Home *int `json:"home"`
+			Away *int `json:"away"`
 		} `json:"fulltime"`
 		Extratime struct {
 			Home *int `json:"home"`

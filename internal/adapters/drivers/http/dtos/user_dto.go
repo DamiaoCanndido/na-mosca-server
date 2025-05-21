@@ -73,9 +73,9 @@ func (r *RegisterUserRequest) Validate() map[string]string {
 
 	// Validação da confirmação de senha
 	if strings.TrimSpace(r.ConfirmPassword) == "" {
-		errors["confirm password"] = "A confirmação de senha é obrigatória"
+		errors["confirm_password"] = "A confirmação de senha é obrigatória"
 	} else if r.Password != r.ConfirmPassword {
-		errors["confirm password"] = "As senhas não coincidem"
+		errors["confirm_password"] = "As senhas não coincidem"
 	}
 
 	return errors

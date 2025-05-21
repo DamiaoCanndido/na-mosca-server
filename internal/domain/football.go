@@ -26,8 +26,8 @@ type Fixture struct {
 	Round     string    `json:"round"`
 	HomeTeam  Team      `json:"homeTeam"`
 	AwayTeam  Team      `json:"awayTeam"`
-	GoalsHome int       `json:"goalsHome"`
-	GoalsAway int       `json:"goalsAway"`
+	GoalsHome *int      `json:"goalsHome"`
+	GoalsAway *int      `json:"goalsAway"`
 }
 
 type FootballRepository interface {
