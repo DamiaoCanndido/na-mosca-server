@@ -65,3 +65,19 @@ func (h *UserHandler) Login(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"token": token})
 } 
+
+func (h *UserHandler) GetMe(c *gin.Context) {
+	token := c.Request.Header.Get("Authorization")
+	if token == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token não fornecido"})
+		return
+	}
+
+	user, err := h.service.GetMe(token)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}

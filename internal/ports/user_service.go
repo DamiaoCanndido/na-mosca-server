@@ -3,6 +3,7 @@ package ports
 import (
 	"errors"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/DamiaoCanndido/na-mosca-server/internal/domain"
@@ -43,6 +44,29 @@ func (s *UserService) RegisterUser(name, avatar_url, email, password string) (*d
 	err = s.repo.RegisterUser(user)
 	if err != nil {
 		return nil, err
+	}
+
+	return user, nil
+}
+
+func (s *UserService) GetMe(token string) (*domain.User, error) {
+	tokenSanitized := strings.TrimPrefix(token, "Bearer ")
+	claims := &jwt.RegisteredClaims{}
+	tkn, err := jwt.ParseWithClaims(tokenSanitized, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(os.Getenv("JWT_SECRET")), nil
+	})
+	if err != nil || !tkn.Valid {
+		return nil, errors.New("token inválido")
+	}
+
+	userID, err := uuid.Parse(claims.Subject)
+	if err != nil {
+		return nil, errors.New("token inválido")
+	}
+
+	user, err := s.repo.FindByID(userID)
+	if err != nil {
+		return nil, errors.New("usuário não encontrado")
 	}
 
 	return user, nil

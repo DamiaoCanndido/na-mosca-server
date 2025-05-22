@@ -18,8 +18,7 @@ func SetupAuthRoutes(router *gin.Engine, userHandler *handlers.UserHandler) {
 		protected := auth.Group("/")
 		protected.Use(middleware.AuthMiddleware())
 		{
-			// Aqui podem ser adicionadas rotas protegidas relacionadas à autenticação
-			// Por exemplo: refresh token, logout, etc.
+			protected.GET("/me", userHandler.GetMe)
 		}
 	}
 } 

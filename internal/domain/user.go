@@ -35,10 +35,12 @@ type User struct {
 type UserRepository interface {
 	RegisterUser(user *User) error
 	FindByEmail(email string) (*User, error)
+	FindByID(id uuid.UUID) (*User, error)
 	VerifyPassword(user *User, password string) error
 }
 
 type UserService interface {
 	RegisterUser(name, avatar_url, email, password string) (*User, error)
 	Authenticate(email, password string) (string, error)
+	GetMe(token string) (*User, error)
 } 

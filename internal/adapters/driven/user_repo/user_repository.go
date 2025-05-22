@@ -6,6 +6,7 @@ import (
 	"errors"
 
 	"github.com/DamiaoCanndido/na-mosca-server/internal/domain"
+	"github.com/google/uuid"
 
 	"golang.org/x/crypto/argon2"
 	"gorm.io/gorm"
@@ -102,6 +103,15 @@ func (r *UserRepository) RegisterUser(user *domain.User) error {
 func (r *UserRepository) FindByEmail(email string) (*domain.User, error) {
 	var user domain.User
 	err := r.db.Where("email = ?", email).First(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func (r *UserRepository) FindByID(id uuid.UUID) (*domain.User, error) {
+	var user domain.User
+	err := r.db.Where("id = ?", id).First(&user).Error
 	if err != nil {
 		return nil, err
 	}
