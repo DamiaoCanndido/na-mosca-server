@@ -5,6 +5,7 @@ import (
 
 	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/drivers/http/dtos"
 	"github.com/DamiaoCanndido/na-mosca-server/internal/ports"
+	"github.com/google/uuid"
 
 	"github.com/gin-gonic/gin"
 )
@@ -73,7 +74,21 @@ func (h *UserHandler) GetMe(c *gin.Context) {
 		return
 	}
 
-	user, err := h.service.GetMe(token)
+	userID, exists := c.Get("user_id")
+
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User ID not found in context"})
+		return
+	}
+
+	// Convert userID to uuid.UUID
+	userUUID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID type"})
+		return
+	}
+
+	user, err := h.service.GetMe(token, userUUID)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
 		return

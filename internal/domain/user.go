@@ -42,5 +42,5 @@ type UserRepository interface {
 type UserService interface {
 	RegisterUser(name, avatar_url, email, password string) (*User, error)
 	Authenticate(email, password string) (string, error)
-	GetMe(token string) (*User, error)
+	GetMe(token string, userID uuid.UUID) (*User, error)
 } 

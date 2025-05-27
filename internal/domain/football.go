@@ -36,8 +36,3 @@ type FootballRepository interface {
 	GetTodayFixtures() ([]Fixture, error)
 }
 
-type FootballService interface {
-	GetLeagues(leagueIDs []int) ([]League, error)
-	GetFixtures(leagueID int, season string, status string) ([]Fixture, error)
-	GetTodayFixtures() ([]Fixture, error)
-} 
