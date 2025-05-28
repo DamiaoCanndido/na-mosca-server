@@ -35,7 +35,7 @@ func (h *FootballHandler) GetFixtures(c *gin.Context) {
 	leagueID, err := strconv.Atoi(c.Param("leagueID"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error":   "ID da liga inválido",
+			"error":   "Invalid league ID",
 			"details": err.Error(),
 		})
 		return
@@ -44,8 +44,8 @@ func (h *FootballHandler) GetFixtures(c *gin.Context) {
 	seasonQuery := c.Query("season")
 	if seasonQuery == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error":   "Temporada não informada",
-			"details": "A temporada deve ser informada na query string",
+			"error":   "Season not provided",
+			"details": "Season must be provided in the query string",
 		})
 		return
 	}
@@ -56,7 +56,7 @@ func (h *FootballHandler) GetFixtures(c *gin.Context) {
 	fixtures, err := h.service.GetFixtures(leagueID, season, status)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error":   "Erro ao buscar jogos",
+			"error":   "Error fetching fixtures",
 			"details": err.Error(),
 		})
 		return

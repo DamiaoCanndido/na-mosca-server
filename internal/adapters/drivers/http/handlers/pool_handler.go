@@ -22,7 +22,7 @@ func (h *PoolHandler) CreatePool(c *gin.Context) {
 
 	// Validação personalizada
 	if errors := req.Validate(); len(errors) > 0 {
-		c.JSON(400, gin.H{"error": "Erro de validação", "details": errors})
+		c.JSON(400, gin.H{"error": "Validation error", "details": errors})
 		return
 	}
 
@@ -32,7 +32,7 @@ func (h *PoolHandler) CreatePool(c *gin.Context) {
 	poolName, err := h.service.Create(req.Name, userUUID)
 
 	if err != nil {
-		c.JSON(400, gin.H{"error": "Erro ao criar pool"})
+		c.JSON(400, gin.H{"error": "Error creating pool"})
 		return
 	}
 
@@ -43,13 +43,13 @@ func (h *PoolHandler) GetPoolByID(c *gin.Context) {
 	poolIDStr := c.Param("pool_id")
 	poolID, err := uuid.Parse(poolIDStr)
 	if err != nil {
-		c.JSON(400, gin.H{"error": "ID de pool inválido"})
+		c.JSON(400, gin.H{"error": "Invalid pool ID"})
 		return
 	}
 
 	pool, err := h.service.GetByID(poolID)
 	if err != nil {
-		c.JSON(404, gin.H{"error": "Pool não encontrada"})
+		c.JSON(404, gin.H{"error": "Pool not found"})
 		return
 	}
 

@@ -20,15 +20,15 @@ func NewUserService(repo domain.UserRepository) *UserService {
 }
 
 func (s *UserService) RegisterUser(name, avatar_url, email, password string) (*domain.User, error) {
-	// Verificar se o email já existe
+	// Check if email already exists
 	existingUser, err := s.repo.FindByEmail(email)
 	if err == nil && existingUser != nil {
-		return nil, errors.New("email já está em uso")
+		return nil, errors.New("email is already in use")
 	}
 
-	// Verificar tamanho mínimo da senha
+	// Check minimum password length
 	if len(password) < 6 {
-		return nil, errors.New("a senha deve ter no mínimo 6 caracteres")
+		return nil, errors.New("password must be at least 6 characters long")
 	}
 
 	user := &domain.User{
@@ -51,7 +51,7 @@ func (s *UserService) RegisterUser(name, avatar_url, email, password string) (*d
 func (s *UserService) GetMe(token string, userID uuid.UUID) (*domain.User, error) {
 	user, err := s.repo.FindByID(userID)
 	if err != nil {
-		return nil, errors.New("usuário não encontrado")
+		return nil, errors.New("user not found")
 	}
 
 	return user, nil
@@ -79,4 +79,4 @@ func (s *UserService) Authenticate(email, password string) (string, error) {
 	}
 
 	return tokenString, nil
-} 
+}

@@ -27,7 +27,7 @@ type FootballAPI struct {
 func NewFootballAPI() *FootballAPI {
 	apiKey := os.Getenv("FOOTBALL_API_KEY")
 	if apiKey == "" {
-		log.Fatal("FOOTBALL_API_KEY não encontrada nas variáveis de ambiente")
+		log.Fatal("FOOTBALL_API_KEY not found in environment variables")
 	}
 
 	return &FootballAPI{
@@ -42,7 +42,7 @@ func NewFootballAPI() *FootballAPI {
 func (api *FootballAPI) makeRequest(endpoint string, params map[string]string) (*http.Response, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s", baseURL, endpoint), nil)
 	if err != nil {
-		return nil, fmt.Errorf("erro ao criar requisição: %v", err)
+		return nil, fmt.Errorf("error creating request: %v", err)
 	}
 
 	// Adiciona headers necessários
@@ -86,22 +86,22 @@ func (api *FootballAPI) GetLeagues(leagueIDs []int) ([]domain.League, error) {
 
 		resp, err := api.makeRequest("leagues", params)
 		if err != nil {
-			return nil, fmt.Errorf("erro ao buscar liga com ID %d: %v", id, err)
+			return nil, fmt.Errorf("error fetching league with ID %d: %v", id, err)
 		}
 		defer resp.Body.Close()
 
 		body, err := io.ReadAll(resp.Body)
 		if err != nil {
-			return nil, fmt.Errorf("erro ao ler resposta para liga com ID %d: %v", id, err)
+			return nil, fmt.Errorf("error reading response for league with ID %d: %v", id, err)
 		}
 
 		var apiResponse dto.APIResponse
 		if err := json.Unmarshal(body, &apiResponse); err != nil {
-			return nil, fmt.Errorf("erro ao decodificar resposta para liga com ID %d: %v", id, err)
+			return nil, fmt.Errorf("error decoding response for league with ID %d: %v", id, err)
 		}
 
 		if len(apiResponse.Errors) > 0 {
-			return nil, fmt.Errorf("erros da API para liga com ID %d: %v", id, apiResponse.Errors)
+			return nil, fmt.Errorf("API errors for league with ID %d: %v", id, apiResponse.Errors)
 		}
 
 		var apiLeagues []dto.ApiLeague

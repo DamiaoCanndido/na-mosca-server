@@ -70,7 +70,7 @@ func (h *UserHandler) Login(c *gin.Context) {
 func (h *UserHandler) GetMe(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
 	if token == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token não fornecido"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token not provided"})
 		return
 	}
 
@@ -90,7 +90,7 @@ func (h *UserHandler) GetMe(c *gin.Context) {
 
 	user, err := h.service.GetMe(token, userUUID)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 		return
 	}
 
