@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"net/http"
+
 	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/drivers/http/dtos"
 	"github.com/DamiaoCanndido/na-mosca-server/internal/ports"
 	"github.com/gin-gonic/gin"
@@ -32,31 +34,31 @@ func (h *PoolHandler) CreatePool(c *gin.Context) {
 	poolName, err := h.service.Create(req.Name, userUUID)
 
 	if err != nil {
-		c.JSON(400, gin.H{"error": "Error creating pool"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Error creating pool"})
 		return
 	}
 
-	c.JSON(201, gin.H{"name": poolName})
+	c.JSON(http.StatusCreated, gin.H{"name": poolName})
 }
 
 func (h *PoolHandler) GetPoolByID(c *gin.Context) {
 	poolIDStr := c.Param("pool_id")
 	poolID, err := uuid.Parse(poolIDStr)
 	if err != nil {
-		c.JSON(400, gin.H{"error": "Invalid pool ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid pool ID"})
 		return
 	}
 
 	pool, err := h.service.GetByID(poolID)
 	if err != nil {
-		c.JSON(404, gin.H{"error": "Pool not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Pool not found"})
 		return
 	}
 
-	c.JSON(200, dtos.PoolResponse{
-		ID:   pool.ID.String(),
-		Name: pool.Name,
+	c.JSON(http.StatusOK, dtos.PoolResponse{
+		ID:           pool.ID.String(),
+		Name:         pool.Name,
 		Participants: pool.Participants,
-		Games: pool.Games,
+		Games:        pool.Games,
 	})
 }
