@@ -56,5 +56,7 @@ func (h *PoolHandler) GetPoolByID(c *gin.Context) {
 	c.JSON(200, dtos.PoolResponse{
 		ID:   pool.ID.String(),
 		Name: pool.Name,
+		Participants: pool.Participants,
+		Games: pool.Games,
 	})
 }
