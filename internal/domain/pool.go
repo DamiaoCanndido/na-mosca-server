@@ -9,7 +9,7 @@ import (
 type Pool struct {
 	ID           uuid.UUID  `json:"id" gorm:"type:uuid;primary_key"`
 	Name         string     `gorm:"not null"`
-	OwnerID      uint       `gorm:"not null"`
+	OwnerID      uuid.UUID  `gorm:"not null"`
 	Owner        User       `gorm:"foreignKey:OwnerID"`
 	CreatedAt    time.Time  `json:"created_at"`
 	UpdatedAt    time.Time  `json:"updated_at"`

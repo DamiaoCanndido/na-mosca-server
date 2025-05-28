@@ -5,6 +5,7 @@ import (
 	"os"
 
 	footApiRepo "github.com/DamiaoCanndido/na-mosca-server/internal/adapters/driven/foot_api_repo"
+	poolRepo "github.com/DamiaoCanndido/na-mosca-server/internal/adapters/driven/pool_repo"
 	userRepo "github.com/DamiaoCanndido/na-mosca-server/internal/adapters/driven/user_repo"
 	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/drivers/http/handlers"
 	"github.com/DamiaoCanndido/na-mosca-server/internal/adapters/drivers/http/routes"
@@ -31,18 +32,22 @@ func main() {
 
 	// Auto-migrate the schema
 	db.AutoMigrate(&domain.User{})
+	db.AutoMigrate(&domain.Pool{})
 
 	// Initialize repositories
 	userRepo := userRepo.NewUserRepository(db)
 	footballRepo := footApiRepo.NewFootballAPI()
+	poolRepo := poolRepo.NewPoolRepository(db)
 
 	// Initialize services
 	userService := ports.NewUserService(userRepo)
 	footballService := ports.NewFootballService(footballRepo)
+	poolService := ports.NewPoolService(poolRepo)
 
 	// Initialize handlers
 	userHandler := handlers.NewUserHandler(userService)
 	footballHandler := handlers.NewFootballHandler(footballService)
+	poolHandler := handlers.NewPoolHandler(poolService)
 
 	// Initialize router
 	r := gin.Default()
@@ -58,6 +63,7 @@ func main() {
 	// Setup routes
 	routes.SetupAuthRoutes(r, userHandler)
 	routes.SetupFootballRoutes(r, footballHandler)
+	routes.SetupPoolRoutes(r, poolHandler)
 
 	// Start server
 	r.Run(":8080")
