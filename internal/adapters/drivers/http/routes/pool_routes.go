@@ -15,6 +15,7 @@ func SetupPoolRoutes(router *gin.Engine, poolHandler *handlers.PoolHandler) {
 		protected.Use(middleware.AuthMiddleware())
 		{
 			protected.POST("/create", poolHandler.CreatePool)
+			protected.GET("/:pool_id", poolHandler.GetPoolByID)
 		}
 	}
 } 

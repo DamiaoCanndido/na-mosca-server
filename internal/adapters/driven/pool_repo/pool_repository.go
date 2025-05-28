@@ -10,20 +10,29 @@ type PoolRepository struct {
 	db *gorm.DB
 }
 
+func NewPoolRepository(db *gorm.DB) *PoolRepository {
+	return &PoolRepository{
+		db: db,
+	}
+}
+
 // AddParticipant implements domain.PoolRepository.
 func (r *PoolRepository) AddParticipant(poolID uuid.UUID, userID uuid.UUID) (string, error) {
 	panic("unimplemented")
 }
 
-// GetByID implements domain.PoolRepository.
-func (r *PoolRepository) GetByID(poolID uuid.UUID) (*domain.Pool, error) {
+// AddGame implements domain.PoolRepository.
+func (r *PoolRepository) AddGame(gameID uuid.UUID, userID uuid.UUID) (string, error) {
 	panic("unimplemented")
 }
 
-func NewPoolRepository(db *gorm.DB) *PoolRepository {
-	return &PoolRepository{
-		db: db,
+// GetByID implements domain.PoolRepository.
+func (r *PoolRepository) GetByID(poolID uuid.UUID) (*domain.Pool, error) {
+	var pool domain.Pool
+	if err := r.db.First(&pool, "id = ?", poolID).Error; err != nil {
+		return nil, err
 	}
+	return &pool, nil
 }
 
 func (r *PoolRepository) Create(name string, ownerID uuid.UUID) (string, error) {

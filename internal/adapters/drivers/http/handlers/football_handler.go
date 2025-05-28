@@ -19,7 +19,7 @@ func NewFootballHandler(service *ports.FootballService) *FootballHandler {
 func (h *FootballHandler) GetLeagues(c *gin.Context) {
 	
 
-	var leagueIDs = []int{71, 72}
+	var leagueIDs = []int{71, 72, 15}
 	
 
 	leagues, err := h.service.GetLeagues(leagueIDs)

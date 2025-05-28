@@ -16,3 +16,7 @@ func NewPoolService(repo domain.PoolRepository) *PoolService {
 func (s *PoolService) Create(name string, ownerID uuid.UUID) (string, error) {
 	return s.repo.Create(name, ownerID)
 }
+
+func (s *PoolService) GetByID(poolID uuid.UUID) (*domain.Pool, error) {
+	return s.repo.GetByID(poolID)
+}

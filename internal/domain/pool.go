@@ -14,10 +14,12 @@ type Pool struct {
 	CreatedAt    time.Time  `json:"created_at"`
 	UpdatedAt    time.Time  `json:"updated_at"`
 	Participants []User     `gorm:"many2many:pool_participants;"`
+	Games		 []Game     `gorm:"many2many:pool_games;"`
 }
 
 type PoolRepository interface {
     Create(name string, ownerID uuid.UUID) (string, error)
+	GetByID(poolID uuid.UUID) (*Pool, error)
     AddParticipant(poolID, userID uuid.UUID) (string, error)
-    GetByID(poolID uuid.UUID) (*Pool, error)
+	AddGame(gameID, userID uuid.UUID) (string, error)
 }

@@ -200,7 +200,9 @@ func (api *FootballAPI) GetTodayFixtures() ([]domain.Fixture, error) {
 		return cachedData.([]domain.Fixture), nil
 	}
 
-	resp, err := api.makeRequest("fixtures", map[string]string{"date": today, "status": "NS"})
+	query_strings := map[string]string{"date": today, "status": "NS"}
+
+	resp, err := api.makeRequest("fixtures", query_strings)
 	if err != nil {
 		return nil, err
 	}

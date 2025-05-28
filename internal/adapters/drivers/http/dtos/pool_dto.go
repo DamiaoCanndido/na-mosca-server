@@ -1,7 +1,12 @@
 package dtos
 
 type CreatePoolRequest struct {
-	Name    string    `json:"name" binding:"required" validate:"required,min=3,max=100"`
+	Name string `json:"name" binding:"required" validate:"required,min=3,max=100"`
+}
+
+type PoolResponse struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }
 
 func (r *CreatePoolRequest) Validate() map[string]string {

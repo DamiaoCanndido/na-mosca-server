@@ -36,5 +36,25 @@ func (h *PoolHandler) CreatePool(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, gin.H{"pool_name": poolName})
+	c.JSON(201, gin.H{"name": poolName})
+}
+
+func (h *PoolHandler) GetPoolByID(c *gin.Context) {
+	poolIDStr := c.Param("pool_id")
+	poolID, err := uuid.Parse(poolIDStr)
+	if err != nil {
+		c.JSON(400, gin.H{"error": "ID de pool inválido"})
+		return
+	}
+
+	pool, err := h.service.GetByID(poolID)
+	if err != nil {
+		c.JSON(404, gin.H{"error": "Pool não encontrada"})
+		return
+	}
+
+	c.JSON(200, dtos.PoolResponse{
+		ID:   pool.ID.String(),
+		Name: pool.Name,
+	})
 }
