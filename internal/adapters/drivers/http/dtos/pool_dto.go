@@ -11,6 +11,7 @@ type PoolResponse struct {
 	Name         string              `json:"name"`
 	Participants []domain.User       `json:"participants"`
 	Games        []domain.Game       `json:"games"`
+	OwnerID      string              `json:"owner_id"`
 }
 
 func (r *CreatePoolRequest) Validate() map[string]string {

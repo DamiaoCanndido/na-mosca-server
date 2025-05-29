@@ -36,8 +36,8 @@ func main() {
 
 	// Initialize repositories
 	userRepo := userRepo.NewUserRepository(db)
-	footballRepo := footApiRepo.NewFootballAPI()
 	poolRepo := poolRepo.NewPoolRepository(db)
+	footballRepo := footApiRepo.NewFootballAPI(poolRepo)
 
 	// Initialize services
 	userService := ports.NewUserService(userRepo)

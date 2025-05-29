@@ -6,6 +6,7 @@ import (
 
 	"github.com/DamiaoCanndido/na-mosca-server/internal/ports"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type FootballHandler struct {
@@ -76,4 +77,50 @@ func (h *FootballHandler) GetTodayFixtures(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, fixtures)
+}
+
+func (h *FootballHandler) AddGameToPool(c *gin.Context) {
+	apiGameID, err := strconv.Atoi(c.Param("api_game_id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   "Invalid game ID",
+			"details": err.Error(),
+		})
+		return
+	}
+
+	poolID, err := uuid.Parse(c.Param("pool_id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   "Invalid pool ID",
+			"details": err.Error(),
+		})
+		return
+	}
+
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   "User ID not found",
+			"details": "User ID must be provided",
+		})
+		return
+	}
+
+	ownerUUID, err := uuid.Parse(userID.(string))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID type"})
+		return
+	}
+
+	game, err := h.service.AddGameToPool(apiGameID, ownerUUID, poolID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error":   "Error adding game to pool",
+			"details": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, game)
 }

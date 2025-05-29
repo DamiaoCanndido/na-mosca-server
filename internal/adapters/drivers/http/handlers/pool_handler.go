@@ -60,5 +60,6 @@ func (h *PoolHandler) GetPoolByID(c *gin.Context) {
 		Name:         pool.Name,
 		Participants: pool.Participants,
 		Games:        pool.Games,
+		OwnerID:      pool.OwnerID.String(),
 	})
 }

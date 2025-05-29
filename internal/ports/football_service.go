@@ -2,6 +2,7 @@ package ports
 
 import (
 	"github.com/DamiaoCanndido/na-mosca-server/internal/domain"
+	"github.com/google/uuid"
 )
 
 type FootballService struct {
@@ -17,9 +18,17 @@ func (s *FootballService) GetLeagues(leagueIDs []int) ([]domain.League, error) {
 }
 
 func (s *FootballService) GetFixtures(leagueID int, season string, status string) ([]domain.Fixture, error) {
-	return s.repo.GetFixtures(leagueID, season, status)
+	return s.repo.GetFixturesByLeague(leagueID, season, status)
 }
 
 func (s *FootballService) GetTodayFixtures() ([]domain.Fixture, error) {
 	return s.repo.GetTodayFixtures()
+}
+
+func (s *FootballService) AddGameToPool(apiGameID int, ownerID, poolID uuid.UUID) (*domain.Game, error) {
+	game, err := s.repo.AddGameToPool(apiGameID, ownerID, poolID)
+	if err != nil {
+		return nil, err
+	}
+	return game, nil
 }

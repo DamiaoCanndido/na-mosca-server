@@ -1,6 +1,10 @@
 package domain
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type League struct {
 	ID      int    `json:"id"`
@@ -32,7 +36,8 @@ type Fixture struct {
 
 type FootballRepository interface {
 	GetLeagues(leagueIDs []int) ([]League, error)
-	GetFixtures(leagueID int, season string, status string) ([]Fixture, error)
+	GetFixturesByLeague(leagueID int, season string, status string) ([]Fixture, error)
 	GetTodayFixtures() ([]Fixture, error)
+	AddGameToPool(apiGameID int, ownerID, poolID uuid.UUID) (*Game, error)
 }
 
